@@ -22,7 +22,7 @@
               <td><?= $datas->email_user ?></td>
               <td>
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editModalll<?= $datas->id_user ?>">Edit</button>
-                <a href="<?= $this->url->get('user/hapus/' . $datas->id_user) ?>" type="button" class="btn btn-danger">Delete</a>
+                <a href="<?= $this->url->get('user/hapus/' . $datas->id_user) ?>" onclick="return confirm('Apakah anda yakin ingin menghapus ?')" type="button" class="btn btn-danger">Delete</a>
             </td>
                       </tr>
           <div class="modal fade" id="editModalll<?= $datas->id_user ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

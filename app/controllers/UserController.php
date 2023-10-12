@@ -10,7 +10,6 @@ class UserController extends ControllerBase
         // Ambil semua data pengguna
         $user = User::find();
   
-        
         // Kirim data pengguna ke tampilan
         $this->view->user = $user;
         
@@ -26,11 +25,20 @@ class UserController extends ControllerBase
 
             if ($user->save()) {
                 // Pengguna berhasil dibuat
-                $this->flash->success("Pengguna berhasil dibuat");
-                return $this->response->redirect("user/index");
+                // $this->flash->success("Pengguna berhasil dibuat");
+                // return $this->response->redirect("user/index");
+                echo '<script> 
+                alert("Pengguna berhasil dibuat.") ;
+                window.location.href = "http://localhost:8080/phalcon_project/test/user/index";
+                </script>';
             } else {
                 // Ada kesalahan dalam pembuatan pengguna
-                $this->flash->error("Terjadi kesalahan. Pengguna tidak dapat dibuat.");
+                // $this->flash->error("Terjadi kesalahan. Pengguna tidak dapat dibuat.");
+                echo '<script> 
+                alert("Terjadi kesalahan. Pengguna tidak dapat dibuat.") ;
+                window.location.href = "http://localhost:8080/phalcon_project/test/user/index";
+                </script>';
+                
             }
         }
     }
@@ -89,7 +97,7 @@ class UserController extends ControllerBase
 
                 if ($user->save()) {
                     // Pengguna berhasil diupdate
-                    $this->flash->success("Pengguna berhasil diupdate");
+                    // $this->flash->success("Pengguna berhasil diupdate");
                 } else {
                     // Ada kesalahan dalam pembaruan pengguna
                     $this->flash->error("Terjadi kesalahan. Pengguna tidak dapat diupdate.");
