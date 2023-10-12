@@ -1,4 +1,5 @@
 <?= $this->tag->form(['/User/create', 'role' => 'form']) ?>
+Halaman Input Data
 <div class="card" style="margin-top: 300px;">
    <div class="card-header">
 <form>
