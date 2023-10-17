@@ -4,11 +4,11 @@
 
 {% for datas in page.items %}
   {% if loop.first %}
-  <div class="card" style="margin-top: 150px;">
+  <div class="card" style="margin-top: 150px;" id="isi">
     <div class="card-header">
         <nav class="navbar navbar-expand-lg bg-light" style="margin-left: 50px; margin-right: 50px;">
         <form class="d-flex" role="search">
-            <input class="form-control me-2" name="nama_user" type="search" placeholder="Cari Berdasarkan Nama" aria-label="Search">
+            <input class="form-control me-2" id="cariNama" name="nama_user" type="search" placeholder="Cari Berdasarkan Nama" aria-label="Search">
             <input class="btn btn-outline-primary" type="submit" value="cari">
         </form>
     </nav>
@@ -28,76 +28,62 @@
               <td>{{ datas.nama_user }}</td>
               <td>{{ datas.email_user }}</td>
               <td>
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editModalll{{ datas.id_user }}">Edit</button>
-                <a href="{{ url('user/hapus/' ~ datas.id_user) }}" onclick="return confirm('Apakah anda yakin ingin menghapus ?')" type="button" class="btn btn-danger">Delete</a>
+                <a href='#exampleModal' class='btn btn-success btn-small' id='editId' data-toggle='modal' data-id="{{datas.id_user}}">Edit</a>
+                <!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editModalll{{ datas.id_user }}">Edit</button> -->
+                <!-- <a href="{{ url('user/hapus/' ~ datas.id_user) }}" onclick="return confirm('Apakah anda yakin ingin menghapus ?')" type="button" class="btn btn-danger">Delete</a> -->
+                <a href='#deleteModal' class='btn btn-danger btn-small' id='deleteId' data-toggle='modal' data-id="{{datas.id_user}}">Delete</a>
             </td>
                       </tr>
                       
-                      <!-- edit data -->
-          <div class="modal fade" id="editModalll{{ datas.id_user }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <!-- form data -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Pengguna</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                            </div>
-                            <div class="modal-body">
-                            <form action="{{ url('user/update') }}" method="post">
-                                <div class="mb-3">
-                                <input type="hidden" name="txt_id" value="{{ datas.id_user }}">
-                                </div>
-                                <div class="mb-3">
-                                <label for="name" class="form-label">Nama</label>
-                                <input type="text" class="form-control" name="txt_nama" value="{{ datas.nama_user }}" aria-describedby="emailHelp">
-                                </div>
-                                <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="text" class="form-control" name="txt_email" value="{{ datas.email_user }}" aria-describedby="emailHelp">
-                                </div>                      
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                        </div>
-                    </form>
+              <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Form User</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
+                <div class="modal-body">
+                  <form action="{{ url('user/update') }}" id="frmUser">
+                    <div class="form-group">
+                      <label for="txt_nama">Nama</label>
+                      <input type="hidden" id="id_user" name="id_user"  value="{{ datas.id_user }}">
+                      <input type="text" class="form-control" id="nama_user" name="txt_nama" value="{{ datas.nama_user }}" placeholder="Masukan Nama User">
+                    </div>	  
+                    <div class="form-group">
+                      <label for="txt_email">Email</label>
+                      <input type="email" class="form-control" id="email_user" name="txt_email" value="{{ datas.email_user }}" placeholder="Masukan Email User">
+                    </div>	  
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" onclick="editUser()" class="btn btn-primary">Save</button>
+                </div>
+              </div>
             </div>
-        </div>
+          </div>
         
                     <!-- hapus data -->
-        <div class="modal fade" id="editModalll{{ datas.id_user }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Pengguna</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                    <div class="modal fade" id="deleteModal" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
-                            <form action="{{ url('user/update') }}" method="post">
-                                <div class="mb-3">
-                                <input type="hidden" name="txt_id" value="{{ datas.id_user }}">
-                                </div>
-                                <div class="mb-3">
-                                <label for="name" class="form-label">Nama</label>
-                                <input type="text" class="form-control" name="txt_nama" value="{{ datas.nama_user }}" aria-describedby="emailHelp">
-                                </div>
-                                <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="text" class="form-control" name="txt_email" value="{{ datas.email_user }}" aria-describedby="emailHelp">
-                                </div>                      
+                                <input type="hidden" id="id_user_d" name="id_user_d">
+                                  <p>Are you sure to delete this user ?</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="button" onclick="deleteUser()" class="btn btn-primary">Yes</button>
+                            </div>
+                          </div>
                         </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+                    </div>
       </tbody>
       
   {% if loop.last %}
@@ -113,7 +99,8 @@
         </td>
     </tr>
     <br>
-    <td> <a href="{{ url('user/' ~ datas.id_user) }}" type="button" class="btn btn-primary">Back</a> </td>
+    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">New User</button><br><br> -->
+    <td> <a href="{{ url('user/' ~ datas.id_user) }}" id="tambahdata" type="button" class="btn btn-primary">Back</a> </td>
     </div>
   </div>
   
@@ -121,3 +108,70 @@
   {% else %}
       No data
   {% endfor %}
+
+  <script>
+    $(document).ready(function(){
+        $('#exampleModal, #deleteModal').on('show.bs.modal', function (e) {
+            var id = $(e.relatedTarget).data('id');
+            if (!id) {
+                $('#id_user').val(''); 
+                $('#id_user_d').val('');
+                $('#nama_user').val('');
+                $('#email_user').val('');
+            } else {
+                $.ajax({
+                    type: 'post',
+                    url: "{{ url('user/edit') }}",
+                    data:  { 'id': id },
+                    success: function(data){
+                        var user = JSON.parse(data);
+
+                        $('#id_user').val(user.id_user);
+                        $('#id_user_d').val(user.id_user);
+                        $('#nama_user').val(user.nama_user);
+                        $('#email_user').val(user.email_user);
+                    }
+                });
+            }
+        });
+    });
+
+    function editUser() {
+        var obj;
+
+        if ($('#nama_user').val().trim() == '') {
+            $('#nama_user').focus();
+            return false;
+        }
+
+        if ($('#email_user').val().trim() == '') {
+            $('#email_user').focus();
+            return false;
+        }	
+
+        $.post("{{ url('user/save') }}", $("#frmUser").serialize(), function(res) {
+            obj = JSON.parse(res);
+            if (obj.return) {
+                $('#exampleModal').modal('hide');
+                location.reload();
+            } else {
+                alert(obj.msg);
+            }
+        });
+    }
+
+    function deleteUser() {
+        var obj, id = $('#id_user_d').val();
+
+        $.post("{{ url('user/delete') }}", { 'id_user': id }, function(res) {
+            obj = JSON.parse(res);
+            if (obj.return) {
+                $('#deleteModal').modal('hide');
+                location.reload();
+            } else {
+                alert(obj.msg);
+            }
+        });
+    }
+</script>
+

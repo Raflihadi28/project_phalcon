@@ -1,6 +1,7 @@
 <?php
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Criteria;
+use Phalcon\Http\Response as Response;
 
 class UserController extends ControllerBase
     {
@@ -14,7 +15,7 @@ class UserController extends ControllerBase
         $this->view->user = $user;
         
     }
-
+    
     public function createAction()
     {
         // Tangani pembuatan pengguna baru
@@ -43,6 +44,48 @@ class UserController extends ControllerBase
         }
     }
     
+    public function saveAction()
+    {
+    	$this->view->disable();
+
+    	$res = new Response;
+
+    	$id_user = $this->request->getPost("id_user");
+
+    	if($id_user == ''){
+
+	    	$create = new User();
+
+	    	$create->assign(array(
+	    		'nama_user' => $this->request->getPost('txt_nama'),
+	    		'email_user' => $this->request->getPost('txt_email'),
+	    	));
+
+	    	$action = $create->save();
+
+	    }else{
+
+	    	$user = User::findFirst($id_user);
+
+	      	$user->id_user = $id_user;
+	   		$user->nama_user = $this->request->getPost("txt_nama");
+	   		$user->email_user = $this->request->getPost("txt_email");
+
+	   		$action = $user->save();
+	    }
+
+   		if (! $action) {
+			$return = array('return' => false, 'msg' => 'Error ! while saving data');
+		} else {
+			$return = array('return' => true);
+		}
+
+    	$res->setContent( json_encode( $return ) );
+
+   		return $res;
+    } 
+
+    
         public function viewDataAction()
         {
             $numberPage = $this->request->getQuery("page", "int");
@@ -60,29 +103,30 @@ class UserController extends ControllerBase
             $this->view->page = $paginator->getPaginate();
             $this->view->data=$user;
         }
+
+        public function editAction(){
+            $this->view->disable();
     
-        public function editAction($id)
-        {
-            // Ambil data pengguna yang akan diedit
-            $user = User::findFirst($id);
-
-            if (!$user) {
-                // Pengguna tidak ditemukan, tindakan lain dapat diambil (misalnya, menampilkan pesan error)
-                $this->flash->error("Pengguna tidak ditemukan.");
-                return $this->response->redirect("viewData");
-            }
-
-            // Kirim data pengguna ke tampilan
-            $this->view->id = $user->id_user;
-            $this->view->email = $user->email_user;
-            $this->view->nama = $user->nama_user;
+            $res = new Response;
+    
+            $id = $this->request->getPost('id');
+               $user = User::findFirst($id);
+    
+               $res->setContent( json_encode( array(
+                   'id_user'=>$user->id_user,
+                   'nama_user'=>$user->nama_user,
+                   'email_user'=>$user->email_user,
+               ) ) );
+    
+               return $res;
         }
+
     
         public function updateAction()
         {
             // Tangani pembaruan data pengguna
             if ($this->request->isPost()) {
-                $id = $this->request->getPost("txt_id");
+                $id = $this->request->getPost("id");
                 $user = User::findFirst($id);
 
                 if (!$user) {
@@ -108,34 +152,28 @@ class UserController extends ControllerBase
             }
         }
 
-            public function hapusAction($id)
-            {
-                // Tangani penghapusan pengguna
-                $user = User::findFirst($id);
+            public function deleteAction()
+        {
+            $this->view->disable();
 
-                if ($user) {
-                    if ($user->delete()) {
-                        // Pengguna berhasil dihapus
-                        $this->flash->success("Pengguna berhasil dihapus");
-                    } else {
-                        // Ada kesalahan dalam penghapusan pengguna
-                        $this->flash->error("Terjadi kesalahan. Pengguna tidak dapat dihapus.");
-                    }
-                } else {
-                    // Pengguna tidak ditemukan
-                    $this->flash->error("Pengguna tidak ditemukan.");
-                }
+            $res = new Response;
 
-                // Mendapatkan URL halaman sebelumnya (jika informasi ini tersedia)
-                $referer = $this->request->getHTTPReferer();
-                
-                // Redirect ke halaman sebelumnya (atau halaman lain)
-                if ($referer) {
-                    $this->response->redirect($referer);
-                } else {
-                    $this->response->redirect("viewData"); // Jika URL halaman sebelumnya tidak tersedia, kembali ke halaman daftar pengguna
-                }
+            $id = $this->request->getPost('id_user');
+            $user = User::findFirst($id);
+
+            if (! $user->delete()) {
+                $return = array('return' => false, 'msg' => 'Error ! while deleting data');
+            } else {
+                $return = array('return' => true);
             }
+
+            $res->setContent( json_encode( $return ) );
+
+            return $res;
+        }
+
+
+        
 
             public function cariAction()
             {

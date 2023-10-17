@@ -28,15 +28,15 @@
                  <div class="modal-body">
                   <form>
                      <div class="mb-3">
-                        <input type="hidden" name="txt_id" value=<?php echo $id ?>>
+                        <input type="hidden" name="txt_id" value=<?php echo $id ?>/>
                       </div>
                      <div class="mb-3">
                        <label for="name" class="form-label">Nama</label>
-                       <input type="text" class="form-control" name="txt_nama" value="<?php echo $nama ?>"aria-describedby="emailHelp">
+                       <input type="text" class="form-control" name="txt_nama" value="<?php echo $nama ?>"aria-describedby="emailHelp"/>
                      </div>
                      <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="text" class="form-control" name="txt_email" value="<?php echo $email ?>" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" name="txt_email" value="<?php echo $email ?>" aria-describedby="emailHelp"/>
                       </div>
                      <button type="submit" class="btn btn-primary">Save</button>
                    </form>
